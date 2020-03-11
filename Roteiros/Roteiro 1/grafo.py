@@ -104,6 +104,21 @@ class Grafo:
 
     #### =========================== COMEÇA AKI ======================================
 
+    # A) Encontre todos os pares de vértices não adjacentes.
+    def vertices_nao_adjacentes(self):
+        Arestas = self.A.keys()
+        ListaArestas = list(self.A.values())
+        Retorno = []
+
+        for vertice in self.N:
+            for vertice2 in self.N:
+                ArestaContem = vertice + '-' + vertice2
+                ArestaContem2 = vertice2 + '-' + vertice
+                if ( (not (ArestaContem in ListaArestas)) and (not (ArestaContem2 in ListaArestas)) ): 
+                    Retorno.append(ArestaContem)
+
+        return Retorno;
+
     # B) Há algum vértice adjacente a ele mesmo? (Retorne True ou False)
     def ha_laco(self):
         '''Esse conta com três parâmetros, justamente caso dejese conferir se os pontos das arestas existem'''
@@ -120,7 +135,7 @@ class Grafo:
                     NOME1 = NOME2
                     NOME2 = ''
             if (NOME1==NOME2 and NOME2 in nome ):
-                return e
+                return True
             else:
                 NOME1, NOME2 = '', ''
         return False
@@ -129,10 +144,7 @@ class Grafo:
     # C) Há arestas paralelas? (Retorne True ou False)
 
     # Função auxiliar
-    def ha_paralelas(self):
-        nome = self.N
-        a = self.A
-
+    def CONFERIR(self,nome,a):
         NOME1, NOME2 = '', ''
         for e in a.values():
             for i in range(len(e)):
@@ -142,77 +154,124 @@ class Grafo:
                     NOME1 = NOME2
                     NOME2 = ''
             if (NOME1 == NOME2 and NOME2 in nome):
-                return e
+                return True
             else:
                 NOME1, NOME2 = '', ''
         return False
 
+    def ha_paralelas(self):
+        A = self.CONFERIR(self.N,self.A)
+        if (A == True):
+            return True
+        else:
+            return False
 
+    # D) Qual o grau de um vértice arbitrário?
+    def grau(self, vertice):
+        Ocorrencia = 0
 
+        Arestas = list(self.A.values())
+        for a in Arestas:
+            if( vertice in a ): Ocorrencia += 1
+        
+        return (Ocorrencia)
 
-    #=========================== Roteiro 3 ====================================
-    def ehConexo(self):
-        for vertice in self.N:
-            Resultado = self.buscaEmProfundidade(vertice)
-            ResultadoOrdenado = sorted(Resultado)
-            #print(sorted(Resultado))
-            if( ResultadoOrdenado != sorted(self.N) ): return False
+    # E) Quais arestas incidem sobre um vértice N arbitrário?
+    def arestas_sobre_vertice( self, vertice ):
+        Arestas = self.A.keys()
+        Lista = list()
+        
+        for chave in Arestas:
+            if( vertice in self.A[chave] ):
+                Lista.append(chave)
+            
+        return Lista;
 
+    # f) Esse grafo é completo?
+    #Auxiliar
+    def CONFERERIR_ARESTAS(self,nome,a):
+        for e in a.values():
+            NOME1, NOME2 = '', ''
+            for i in range(len(e)):
+                if e[i] != '-':
+                    NOME2 += e[i]
+                else:
+                    NOME1 = NOME2
+                    NOME2 = ''
+            if (NOME1 not in nome or NOME2 not in nome):
+                return False
         return True
 
-
-    def buscaEmProfundidade(self, vertice, Resultado=None):
-
-        # Corrigindo bug do python em relação ao uso de variáveis como parâmetro
-        if (Resultado == None): Resultado = []
-
-        Arestas = self.A.keys()  # a1, a2, a3
-        # self.A['a1'] = "A-C"
-
-        # Lista com todas arestas que incidem no vértice
-        ArestasComVertice = list()
-
-        for aresta in Arestas:
-            if (vertice in self.A[aresta]):
-                ArestasComVertice.append(aresta)
-
-        # realizando a busca em profundidade
-        if (vertice in Resultado):  # Vértice já está na lista?  (Vulgo caso de parada) + como vericar se é retorno?
-            return Resultado
-
-        else:  # Vertice não está na lista? (o que fazer quando eu tiver que continuar o próximo)
-            for aresta in ArestasComVertice:
-                arestaAtual = self.A[aresta]
-                V1, V2 = arestaAtual[0], arestaAtual[2]  # Se não for 2, é 1
-
-                # Caso for um laco
-                if (V1 == V2):
-                    continue
-
-                # Caso unico em que não se tem mais o que buscar
-                if (len(ArestasComVertice) == 1):
-                    if (V1 not in Resultado and V1 == vertice):
-                        if (V1 not in Resultado) : Resultado.append(V1)
-                    elif (V2 not in Resultado and V2 == vertice):
-                        if (V2 not in Resultado) : Resultado.append(V2)
-
-                if ( aresta not in Resultado ):  # verifica se a aresta ja foi analisada? A gente passa para a próxima aresta da lista 2
-                    if (V1 not in Resultado or V2 not in Resultado):
-
-                        if (V1 == vertice):
-                            if (V1 not in Resultado): Resultado.append(V1)
-                            self.buscaEmProfundidade(vertice=V2, Resultado=Resultado)
-
-                        elif (V2 == vertice):
-                            if (V2 not in Resultado): Resultado.append(V2)
-                            self.buscaEmProfundidade(vertice=V1, Resultado=Resultado)
-                    else:
-                        continue
-
-        # Retornar o resultado
-        if (Resultado[0] == vertice): return Resultado
+    #Auxiliar
+    def FATORIAL(self, NUMERO):
+        if (NUMERO == 1 or NUMERO == 0):
+            return 1
+        else:
+            return self.FATORIAL(NUMERO - 1)
 
 
+    def eh_completo(self):
+        nome = self.N
+        a = self.A
+
+        m = len(nome)
+        p =  m-2
+        z = len(list(a.values()))
+        X = self.FATORIAL(m)
+        #print(X)
+        if (X==z):
+            A = self.CONFERERIR_ARESTAS(nome,a)
+            if (A==True):
+                return True;
+            else:
+                return False;
+        else:
+            return False;
+
+        
+    """
+        ======== Verifica Depois =======
+        def VERIFICAR_LACO(self, a):
+        '''Esse é o caso que não queria passar os nomes do vértices, assim não conferindo se os pontos da arestas existem.'''
+        Lista = []
+        NOME1, NOME2 = '', ''
+        for e in a.values():
+            for i in range(len(e)):
+                if e[i] != '-':
+                    NOME2 += e[i]
+                else:
+                    NOME1 = NOME2
+                    NOME2 = ''
+            if (NOME1 == NOME2):
+                return True
+            else:
+                NOME1, NOME2 = '', ''
+        return False
+    """
+
+
+    '''def ARESTAS_PARALELAS(self,nome,d):
+        Lista,A = [],[]
+       #A = d.values()
+        for e in d.values():
+            A.append(e)
+        a = self.CONFERIR(A)
+        for i in a:
+            if (a[i] > 1):
+                Lista.append(a[i])
+        if Lista != []:
+            return True
+        else:
+            return False'''
+
+
+    '''
+    def vertices_nao_adjacentes(self):
+        for vertice1 in self.N:
+            V = vertice1 + '-'
+            for vertice2 in self.N:
+    '''
+    
 
     #=========================== PARTE DE HENRIQUE ====================================
 
