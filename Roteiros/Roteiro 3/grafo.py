@@ -148,20 +148,76 @@ class Grafo:
         return False
 
 
-
-
     #=========================== Roteiro 3 ====================================
     def ehConexo(self):
         for vertice in self.N:
-            Resultado = self.buscaEmProfundidade(vertice)
+            Resultado = self.VerificaArestasConectadas(vertice)
             ResultadoOrdenado = sorted(Resultado)
             #print(sorted(Resultado))
             if( ResultadoOrdenado != sorted(self.N) ): return False
 
         return True
 
+    def CaminhoComComprimento(self, comprimento):
+        if(comprimento > 0 and comprimento < len(self.N)): #Se o comprimento for menor que a quantidade de vertices
+            TamanhoCaminho = (comprimento * 2) + 1         #n vertices + n arestas + 1 vertice
+            for Vertice in self.N:    
+                Caminho = self.buscaEmProfundidade(Vertice)  #Busco um caminho que o vertice apareca
+                if(len(Caminho) >= TamanhoCaminho):
+                    return Caminho[0:TamanhoCaminho]
+
+        return False
 
     def buscaEmProfundidade(self, vertice, Resultado=None):
+        if(Resultado == None): Resultado = []   
+
+        Arestas = self.A.keys()
+
+        ArestasComVertice = list()
+
+        for aresta in Arestas:
+            if( vertice in self.A[aresta] ):
+                ArestasComVertice.append(aresta)
+
+        # realizando a busca em profundidade
+        if( vertice in Resultado ):     # Vértice já está na lista?  (Vulgo caso de parada) + como vericar se é retorno?
+            return Resultado
+
+        else:   #Vertice não está na lista? (o que fazer quando eu tiver que continuar o próximo)
+            for aresta in ArestasComVertice:
+                arestaAtual = self.A[aresta]
+                V1, V2 = arestaAtual[0], arestaAtual[2]       #Se não for 2, é 1
+                
+                #Caso for um laco
+                if (V1 == V2):
+                    continue
+                
+                #Caso unico em que não se tem mais o que buscar
+                if(len(ArestasComVertice) == 1):
+                    if(V1 not in Resultado and V1 == vertice):
+                        Resultado.append(V1)
+                    elif(V2 not in Resultado and V2 == vertice):
+                        Resultado.append(V2)
+
+                if (aresta not in Resultado):   #verifica se a aresta ja foi analisada? A gente passa para a próxima aresta da lista 2
+                    if(V1 not in Resultado or V2 not in Resultado):
+
+                        if( V1 == vertice):
+                            if(V1 not in Resultado): Resultado.append(V1)
+                            if (aresta not in Resultado) and (V2 not in Resultado): Resultado.append(aresta)
+                            self.buscaEmProfundidade( vertice=V2, Resultado=Resultado )
+
+                        elif ( V2 == vertice ):
+                            if (V2 not in Resultado): Resultado.append(V2)
+                            if (aresta not in Resultado) and (V1 not in Resultado): Resultado.append(aresta)
+                            self.buscaEmProfundidade( vertice=V1, Resultado=Resultado )
+                    else:
+                        continue
+            
+        if(len(Resultado) > 0 and Resultado[0] == vertice): return Resultado
+
+    #Funções auxiliares
+    def VerificaArestasConectadas(self, vertice, Resultado=None):
 
         # Corrigindo bug do python em relação ao uso de variáveis como parâmetro
         if (Resultado == None): Resultado = []
@@ -210,7 +266,7 @@ class Grafo:
                         continue
 
         # Retornar o resultado
-        if (Resultado[0] == vertice): return Resultado
+        if (len(Resultado) > 1 and Resultado[0] == vertice): return Resultado
 
 
 
