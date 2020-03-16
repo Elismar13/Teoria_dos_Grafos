@@ -149,6 +149,8 @@ class Grafo:
 
 
     #=========================== Roteiro 3 ====================================
+
+    #Questão 3
     def ehConexo(self):
         for vertice in self.N:
             Resultado = self.VerificaArestasConectadas(vertice)
@@ -158,65 +160,6 @@ class Grafo:
 
         return True
 
-    def CaminhoComComprimento(self, comprimento):
-        if(comprimento > 0 and comprimento < len(self.N)): #Se o comprimento for menor que a quantidade de vertices
-            TamanhoCaminho = (comprimento * 2) + 1         #n vertices + n arestas + 1 vertice
-            for Vertice in self.N:    
-                Caminho = self.buscaEmProfundidade(Vertice)  #Busco um caminho que o vertice apareca
-                if(len(Caminho) >= TamanhoCaminho):
-                    return Caminho[0:TamanhoCaminho]
-
-        return False
-
-    def buscaEmProfundidade(self, vertice, Resultado=None):
-        if(Resultado == None): Resultado = []   
-
-        Arestas = self.A.keys()
-
-        ArestasComVertice = list()
-
-        for aresta in Arestas:
-            if( vertice in self.A[aresta] ):
-                ArestasComVertice.append(aresta)
-
-        # realizando a busca em profundidade
-        if( vertice in Resultado ):     # Vértice já está na lista?  (Vulgo caso de parada) + como vericar se é retorno?
-            return Resultado
-
-        else:   #Vertice não está na lista? (o que fazer quando eu tiver que continuar o próximo)
-            for aresta in ArestasComVertice:
-                arestaAtual = self.A[aresta]
-                V1, V2 = arestaAtual[0], arestaAtual[2]       #Se não for 2, é 1
-                
-                #Caso for um laco
-                if (V1 == V2):
-                    continue
-                
-                #Caso unico em que não se tem mais o que buscar
-                if(len(ArestasComVertice) == 1):
-                    if(V1 not in Resultado and V1 == vertice):
-                        Resultado.append(V1)
-                    elif(V2 not in Resultado and V2 == vertice):
-                        Resultado.append(V2)
-
-                if (aresta not in Resultado):   #verifica se a aresta ja foi analisada? A gente passa para a próxima aresta da lista 2
-                    if(V1 not in Resultado or V2 not in Resultado):
-
-                        if( V1 == vertice):
-                            if(V1 not in Resultado): Resultado.append(V1)
-                            if (aresta not in Resultado) and (V2 not in Resultado): Resultado.append(aresta)
-                            self.buscaEmProfundidade( vertice=V2, Resultado=Resultado )
-
-                        elif ( V2 == vertice ):
-                            if (V2 not in Resultado): Resultado.append(V2)
-                            if (aresta not in Resultado) and (V1 not in Resultado): Resultado.append(aresta)
-                            self.buscaEmProfundidade( vertice=V1, Resultado=Resultado )
-                    else:
-                        continue
-            
-        if(len(Resultado) > 0 and Resultado[0] == vertice): return Resultado
-
-    #Funções auxiliares
     def VerificaArestasConectadas(self, vertice, Resultado=None):
 
         # Corrigindo bug do python em relação ao uso de variáveis como parâmetro
@@ -257,16 +200,130 @@ class Grafo:
 
                         if (V1 == vertice):
                             if (V1 not in Resultado): Resultado.append(V1)
-                            self.buscaEmProfundidade(vertice=V2, Resultado=Resultado)
+                            self.VerificaArestasConectadas(vertice=V2, Resultado=Resultado)
 
                         elif (V2 == vertice):
                             if (V2 not in Resultado): Resultado.append(V2)
-                            self.buscaEmProfundidade(vertice=V1, Resultado=Resultado)
+                            self.VerificaArestasConectadas(vertice=V1, Resultado=Resultado)
                     else:
                         continue
 
         # Retornar o resultado
         if (len(Resultado) > 1 and Resultado[0] == vertice): return Resultado
+
+    #Questão 2
+    def CaminhoComComprimento(self, comprimento):
+        if(comprimento > 0 and comprimento < len(self.N)): #Se o comprimento for menor que a quantidade de vertices
+            TamanhoCaminho = (comprimento * 2) + 1         #n vertices + n arestas + 1 vertice
+            for Vertice in self.N:    
+                Caminho = self.Caminho(Vertice, comprimento)  #Busco um caminho que o vertice apareca
+                if(len(Caminho) == TamanhoCaminho):
+                    return Caminho[0:TamanhoCaminho]
+
+        return False
+
+    def Caminho(self, vertice, comprimento=0, Resultado=None, VerticesPercorridos=None, ArestasPercorridas=None):
+        if (Resultado == None): Resultado = list()
+        if (VerticesPercorridos == None): VerticesPercorridos = list()
+        if (ArestasPercorridas == None): ArestasPercorridas = list()
+
+        #Listas com arestas
+        Arestas = self.A.keys()
+        ArestasComVertice = list()
+
+        #Arestas q incidem no vertice
+        for aresta in Arestas:
+            if (vertice in self.A[aresta]):
+                ArestasComVertice.append(aresta)
+
+        #Caso de parada para um único vertice
+        if( len(ArestasComVertice) == 1 ):
+            return [vertice, aresta]
+
+        if(len(VerticesPercorridos) == len(self.N)):
+            return Resultado
+
+        #Percorrendo cada aresta que incide no vertice
+        for aresta in Arestas:
+            V1, V2 = self.A[aresta].split('-')
+
+            if(V1 == vertice):
+                if(vertice not in Resultado and aresta not in ArestasPercorridas):
+                    ArvoreDoPai = self.Caminho(vertice=V2, Resultado=Resultado,VerticesPercorridos=VerticesPercorridos)  # Arvore do filho
+                    ArvoreDoPai += [vertice]
+                else:
+                    continue
+
+                if(vertice not in VerticesPercorridos): VerticesPercorridos.append( V2 )
+                if(aresta not in ArestasPercorridas) : ArestasPercorridas.append(aresta)
+                Resultado += ArvoreDoPai
+
+            if(V2 == vertice):
+                if (vertice not in VerticesPercorridos and aresta not in ArestasPercorridas):
+                    ArvoreDoPai = self.Caminho(vertice=V1, Resultado=Resultado)  # Arvore do filho
+                    ArvoreDoPai += [vertice]
+                else:
+                    continue
+
+                if (vertice not in VerticesPercorridos): VerticesPercorridos.append(V1)
+                if (aresta not in ArestasPercorridas): ArestasPercorridas.append(aresta)
+                Resultado += ArvoreDoPai
+
+        if(len(Resultado) > 0 and Resultado[0] == vertice): return Resultado
+
+
+
+
+    def buscaEmProfundidade(self, vertice, Resultado=None):
+        if(Resultado == None): Resultado = []
+
+        Arestas = self.A.keys()
+
+        ArestasComVertice = list()
+
+        for aresta in Arestas:
+            if( vertice in self.A[aresta] ):
+                ArestasComVertice.append(aresta)
+
+        # realizando a busca em profundidade
+        if( vertice in Resultado ):     # Vértice já está na lista?  (Vulgo caso de parada) + como vericar se é retorno?
+            return Resultado
+
+        else:   #Vertice não está na lista? (o que fazer quando eu tiver que continuar o próximo)
+            for aresta in ArestasComVertice:
+                arestaAtual = self.A[aresta]
+                V1, V2 = arestaAtual[0], arestaAtual[2]       #Se não for 2, é 1
+
+                #Caso for um laco
+                if (V1 == V2):
+                    continue
+
+                #Caso unico em que não se tem mais o que buscar
+                if(len(ArestasComVertice) == 1):
+                    if(V1 not in Resultado and V1 == vertice):
+                        Resultado.append(V1)
+                    elif(V2 not in Resultado and V2 == vertice):
+                        Resultado.append(V2)
+
+                if (aresta not in Resultado):   #verifica se a aresta ja foi analisada? A gente passa para a próxima aresta da lista 2
+                    if(V1 not in Resultado or V2 not in Resultado):
+
+                        if( V1 == vertice):
+                            if(V1 not in Resultado): Resultado.append(V1)
+                            if (aresta not in Resultado) and (V2 not in Resultado): Resultado.append(aresta)
+                            self.buscaEmProfundidade( vertice=V2, Resultado=Resultado )
+
+                        elif ( V2 == vertice ):
+                            if (V2 not in Resultado): Resultado.append(V2)
+                            if (aresta not in Resultado) and (V1 not in Resultado): Resultado.append(aresta)
+                            self.buscaEmProfundidade( vertice=V1, Resultado=Resultado )
+                    else:
+                        continue
+
+        if(len(Resultado) > 0 and Resultado[0] == vertice): return Resultado
+
+    #Funções auxiliares (QUESTÃO 3)
+
 
 
 

@@ -1,13 +1,19 @@
 from grafo import *
 
-g = Grafo(['B', 'A', 'C', 'D', 'E', 'F'], {'a1':'A-B', 'a2':'B-C', 'a3':'D-F', 'a4':'F-E', 'a5':'C-D'})
-a = Grafo(['A', 'B', 'C'], {'a1':'A-A', 'a2':'A-B'})
+g = Grafo(['F', 'B', 'C', 'D', 'E', 'A'], {'a1':'A-B', 'a2':'B-C', 'a3':'D-F', 'a4':'F-E', 'a5':'C-D', 'a6':'E-C'})
+a = Grafo(['A', 'B', 'C'], {'a1':'A-C', 'a2':'A-B'})
+
+completoAateG = Grafo(['A','B','C','D','E','F','G'], {'a1':'A-B', 'a2':'B-C', 'a3':'C-B', 'a4':'C-D', 'a5':'D-E', 'a6':'E-F', 'a7': 'D-G', 'a8':'B-G'})
+arvore = Grafo(['A', 'B', 'C', 'D', 'E', 'F'], {"a1":"A-B", 'a2':'A-E', 'a3':'C-B', 'a4':"D-B", 'a5':'E-F'})
 
 #print(a.ehConexo())
+#print(g.ehConexo())
+#print(a.ehConexo())
 
-print(g.CaminhoComComprimento(5))
-print(g.CaminhoComComprimento(4))
-print(g.CaminhoComComprimento(3))
+#print(arvore.CaminhoComComprimento(5))
+
+
+print(a.Caminho('A'))
 
 
 
