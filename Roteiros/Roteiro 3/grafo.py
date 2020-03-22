@@ -147,6 +147,16 @@ class Grafo:
                 NOME1, NOME2 = '', ''
         return False
 
+    #E) arestas sobre vertice
+    def arestas_sobre_vertice( self, vertice ):
+        Arestas = self.A.keys()
+        Lista = list()
+        
+        for chave in Arestas:
+            if( vertice in self.A[chave] ):
+                Lista.append(chave)
+            
+        return Lista;
 
     #=========================== Roteiro 3 ====================================
 
@@ -212,67 +222,61 @@ class Grafo:
         if (len(Resultado) > 1 and Resultado[0] == vertice): return Resultado
 
     #Questão 2
-    def CaminhoComComprimento(self, comprimento):
+    def Caminho(self, comprimento):
         if(comprimento > 0 and comprimento < len(self.N)): #Se o comprimento for menor que a quantidade de vertices
             TamanhoCaminho = (comprimento * 2) + 1         #n vertices + n arestas + 1 vertice
             for Vertice in self.N:    
-                Caminho = self.Caminho(Vertice, comprimento)  #Busco um caminho que o vertice apareca
-                if(len(Caminho) == TamanhoCaminho):
-                    return Caminho[0:TamanhoCaminho]
+                Caminho = self.CaminhoGenerator(Vertice, comprimento)  #Busco um caminho que o vertice apareca
+
+                if(len(Caminho) == comprimento*2 - 1):
+                    return Caminho
+                else:
+                    continue
 
         return False
+        
+    def CaminhoGenerator(self, vertice, comprimento, Resultado=None, PaiGeral=''):
+        if( Resultado == None ): Resultado = [] 
+        if( PaiGeral == '' ): PaiGeral = vertice
 
-    def Caminho(self, vertice, comprimento=0, Resultado=None, VerticesPercorridos=None, ArestasPercorridas=None):
-        if (Resultado == None): Resultado = list()
-        if (VerticesPercorridos == None): VerticesPercorridos = list()
-        if (ArestasPercorridas == None): ArestasPercorridas = list()
 
-        #Listas com arestas
-        Arestas = self.A.keys()
-        ArestasComVertice = list()
+        Arestas = self.A.keys()  # a1, a2, a3
+        ArestasComVertice = self.arestas_sobre_vertice( vertice )
 
-        #Arestas q incidem no vertice
-        for aresta in Arestas:
-            if (vertice in self.A[aresta]):
-                ArestasComVertice.append(aresta)
-
-        #Caso de parada para um único vertice
-        if( len(ArestasComVertice) == 1 ):
-            return [vertice, aresta]
-
-        if(len(VerticesPercorridos) == len(self.N)):
+        #Caso de parada
+        if( len(ArestasComVertice) == 1 and ArestasComVertice[0] in Resultado ):
+            Resultado.append( vertice )
             return Resultado
 
-        #Percorrendo cada aresta que incide no vertice
-        for aresta in Arestas:
+        #percorrendo arestas que contem o pai
+        CaminhoFinal = list()
+
+        MaiorCaminho = 0
+        for aresta in ArestasComVertice:
             V1, V2 = self.A[aresta].split('-')
+            CaminhoAtual = []
 
-            if(V1 == vertice):
-                if(vertice not in Resultado and aresta not in ArestasPercorridas):
-                    ArvoreDoPai = self.Caminho(vertice=V2, Resultado=Resultado,VerticesPercorridos=VerticesPercorridos)  # Arvore do filho
-                    ArvoreDoPai += [vertice]
+            if ( aresta not in Resultado ):
+                if ( V1 == vertice ): 
+                    Resultado.append(V1)
+                    Resultado.append(aresta)
+                    CaminhoAtual = self.CaminhoGenerator( V2, comprimento, Resultado=Resultado )
+                    
+                if ( V2 == vertice ): 
+                    Resultado.append(V2)
+                    Resultado.append(aresta)
+                    CaminhoAtual = self.CaminhoGenerator( V1, comprimento, Resultado )
+            else:
+                continue
+
+            if( vertice  == PaiGeral ):
+                if( len(Resultado) >= comprimento*2 - 1 ):
+                    return Resultado[0:comprimento*2 - 1]
+                
                 else:
-                    continue
+                    Resultado = []
 
-                if(vertice not in VerticesPercorridos): VerticesPercorridos.append( V2 )
-                if(aresta not in ArestasPercorridas) : ArestasPercorridas.append(aresta)
-                Resultado += ArvoreDoPai
-
-            if(V2 == vertice):
-                if (vertice not in VerticesPercorridos and aresta not in ArestasPercorridas):
-                    ArvoreDoPai = self.Caminho(vertice=V1, Resultado=Resultado)  # Arvore do filho
-                    ArvoreDoPai += [vertice]
-                else:
-                    continue
-
-                if (vertice not in VerticesPercorridos): VerticesPercorridos.append(V1)
-                if (aresta not in ArestasPercorridas): ArestasPercorridas.append(aresta)
-                Resultado += ArvoreDoPai
-
-        if(len(Resultado) > 0 and Resultado[0] == vertice): return Resultado
-
-
-
+            #Caso em que só tenho uma aresta no
 
     def buscaEmProfundidade(self, vertice, Resultado=None):
         if(Resultado == None): Resultado = []
@@ -308,7 +312,7 @@ class Grafo:
                 if (aresta not in Resultado):   #verifica se a aresta ja foi analisada? A gente passa para a próxima aresta da lista 2
                     if(V1 not in Resultado or V2 not in Resultado):
 
-                        if( V1 == vertice):
+                        if( V1 == vertice ):
                             if(V1 not in Resultado): Resultado.append(V1)
                             if (aresta not in Resultado) and (V2 not in Resultado): Resultado.append(aresta)
                             self.buscaEmProfundidade( vertice=V2, Resultado=Resultado )

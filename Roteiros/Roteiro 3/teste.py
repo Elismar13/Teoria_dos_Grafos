@@ -3,7 +3,7 @@ from grafo import *
 g = Grafo(['F', 'B', 'C', 'D', 'E', 'A'], {'a1':'A-B', 'a2':'B-C', 'a3':'D-F', 'a4':'F-E', 'a5':'C-D', 'a6':'E-C'})
 a = Grafo(['A', 'B', 'C'], {'a1':'A-C', 'a2':'A-B'})
 
-completoAateG = Grafo(['A','B','C','D','E','F','G'], {'a1':'A-B', 'a2':'B-C', 'a3':'C-B', 'a4':'C-D', 'a5':'D-E', 'a6':'E-F', 'a7': 'D-G', 'a8':'B-G'})
+#completoAateG = Grafo(['A','B','C','D','E','F','G'], {'a1':'A-B', 'a2':'B-C', 'a3':'C-B', 'a4':'C-D', 'a5':'D-E', 'a6':'E-F', 'a7': 'D-G', 'a8':'B-G'})
 arvore = Grafo(['A', 'B', 'C', 'D', 'E', 'F'], {"a1":"A-B", 'a2':'A-E', 'a3':'C-B', 'a4':"D-B", 'a5':'E-F'})
 
 #print(a.ehConexo())
@@ -12,8 +12,8 @@ arvore = Grafo(['A', 'B', 'C', 'D', 'E', 'F'], {"a1":"A-B", 'a2':'A-E', 'a3':'C-
 
 #print(arvore.CaminhoComComprimento(5))
 
-
-print(a.Caminho('A'))
+b = Grafo(['A', 'B', 'C', 'D', 'E'], {'a1':'A-B', 'a2':'A-C', 'a3':'A-D', 'a4':'D-E'})
+print(g.Caminho(5))
 
 
 
