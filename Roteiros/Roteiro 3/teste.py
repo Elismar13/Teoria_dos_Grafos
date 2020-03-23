@@ -12,8 +12,8 @@ arvore = Grafo(['A', 'B', 'C', 'D', 'E', 'F'], {"a1":"A-B", 'a2':'A-E', 'a3':'C-
 
 #print(arvore.CaminhoComComprimento(5))
 
-b = Grafo(['A', 'B', 'C', 'D', 'E'], {'a1':'A-B', 'a2':'A-C', 'a3':'A-D', 'a4':'D-E'})
-print(g.Caminho(5))
+b = Grafo(['A', 'B', 'C', 'D', 'E', 'F'], {'a1':'A-B', 'a2':'A-C', 'a3':'A-D', 'a4':'D-E', 'a5':'D-F', 'a6':'E-F'})
+print(g.Caminho(1))
 
 
 

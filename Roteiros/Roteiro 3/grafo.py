@@ -247,7 +247,8 @@ class Grafo:
         if( len(ArestasComVertice) == 1 and ArestasComVertice[0] in Resultado ):
             Resultado.append( vertice )
             return Resultado
-
+        if(vertice in Resultado):
+            return False
         #percorrendo arestas que contem o pai
         CaminhoFinal = list()
 
