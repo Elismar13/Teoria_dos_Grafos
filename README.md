@@ -16,8 +16,8 @@ git clone https://github.com/Elismar13/Teoria_dos_Grafos.git
 ### Prerequisites
 
 #### Windows, Linux e mac: 
-  [Python3](www.python.org) instalado na máquina;
-  Repositório instalado na máquina;
+  * [Python3](www.python.org) instalado na máquina;
+  * Repositório instalado na máquina;
 
 ## Tecnologias utilizadas
 
