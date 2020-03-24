@@ -228,7 +228,7 @@ class Grafo:
             for Vertice in self.N:    
                 Caminho = self.CaminhoGenerator(Vertice, comprimento)  #Busco um caminho que o vertice apareca
 
-                if(len(Caminho) == comprimento*2 - 1):
+                if(Caminho != None and len(Caminho) == comprimento*2 - 1):
                     return Caminho
                 else:
                     continue
@@ -247,8 +247,8 @@ class Grafo:
         if( len(ArestasComVertice) == 1 and ArestasComVertice[0] in Resultado ):
             Resultado.append( vertice )
             return Resultado
-        if(vertice in Resultado):
-            return False
+        #if(vertice in Resultado):
+            #return False
         #percorrendo arestas que contem o pai
         CaminhoFinal = list()
 
@@ -261,12 +261,12 @@ class Grafo:
                 if ( V1 == vertice ): 
                     Resultado.append(V1)
                     Resultado.append(aresta)
-                    CaminhoAtual = self.CaminhoGenerator( V2, comprimento, Resultado=Resultado )
+                    CaminhoAtual = self.CaminhoGenerator( V2, comprimento, Resultado, PaiGeral )
                     
                 if ( V2 == vertice ): 
                     Resultado.append(V2)
                     Resultado.append(aresta)
-                    CaminhoAtual = self.CaminhoGenerator( V1, comprimento, Resultado )
+                    CaminhoAtual = self.CaminhoGenerator( V1, comprimento, Resultado, PaiGeral )
             else:
                 continue
 
