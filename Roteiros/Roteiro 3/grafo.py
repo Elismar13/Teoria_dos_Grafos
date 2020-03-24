@@ -226,7 +226,7 @@ class Grafo:
         if(comprimento > 0 and comprimento < len(self.N)): #Se o comprimento for menor que a quantidade de vertices
             TamanhoCaminho = (comprimento * 2) + 1         #n vertices + n arestas + 1 vertice
             for Vertice in self.N:    
-                Caminho = self.CaminhoGenerator(Vertice, comprimento)  #Busco um caminho que o vertice apareca
+                Caminho = self.CaminhoGenerator(Vertice, comprimento, "caminho")  #Busco um caminho que o vertice apareca
 
                 if(Caminho != None and len(Caminho) == comprimento*2 - 1):
                     return Caminho
@@ -234,8 +234,19 @@ class Grafo:
                     continue
 
         return False
+    
+        #Questão 2
+    def ciclo(self):
+        comprimento = len(self.N) - 1 #Se o comprimento for menor que a quantidade de vertices
+        for Vertice in self.N:    
+            Caminho = self.CaminhoGenerator(Vertice, comprimento, "ciclo")  #Busco um caminho que o vertice apareca
+
+            if( Caminho != None and Caminho != False):
+                return Caminho
+                    
+        return False
         
-    def CaminhoGenerator(self, vertice, comprimento, Resultado=None, PaiGeral=''):
+    def CaminhoGenerator(self, vertice, comprimento, opcao, Resultado=None, PaiGeral=''):
         if( Resultado == None ): Resultado = [] 
         if( PaiGeral == '' ): PaiGeral = vertice
 
@@ -247,8 +258,23 @@ class Grafo:
         if( len(ArestasComVertice) == 1 and ArestasComVertice[0] in Resultado ):
             Resultado.append( vertice )
             return Resultado
-        #if(vertice in Resultado):
-            #return False
+        if(vertice in Resultado):
+            if(opcao == "caminho"):
+                return False
+            else:
+                Resultado.append( vertice )
+
+                PrimeiraOcorrencia = -1
+                SegundaOcorrencia = -1
+                for index in range(len(Resultado)):
+                    if(vertice == Resultado[index]):
+                        if(PrimeiraOcorrencia == -1):
+                            PrimeiraOcorrencia = index
+                        else:
+                            SegundaOcorrencia = index
+                print(PrimeiraOcorrencia, SegundaOcorrencia)
+                return Resultado[PrimeiraOcorrencia:SegundaOcorrencia]
+
         #percorrendo arestas que contem o pai
         CaminhoFinal = list()
 
@@ -261,12 +287,12 @@ class Grafo:
                 if ( V1 == vertice ): 
                     Resultado.append(V1)
                     Resultado.append(aresta)
-                    CaminhoAtual = self.CaminhoGenerator( V2, comprimento, Resultado, PaiGeral )
+                    CaminhoAtual = self.CaminhoGenerator( V2, comprimento, opcao, Resultado=Resultado, PaiGeral=PaiGeral )
                     
                 if ( V2 == vertice ): 
                     Resultado.append(V2)
                     Resultado.append(aresta)
-                    CaminhoAtual = self.CaminhoGenerator( V1, comprimento, Resultado, PaiGeral )
+                    CaminhoAtual = self.CaminhoGenerator( V1, comprimento, opcao, Resultado=Resultado, PaiGeral=PaiGeral )
             else:
                 continue
 
