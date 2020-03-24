@@ -235,17 +235,42 @@ class Grafo:
 
         return False
     
-        #Questão 2
+        #Questão 1
     def ciclo(self):
-        comprimento = len(self.N) - 1 #Se o comprimento for menor que a quantidade de vertices
+        comprimento = len(self.N) + 1 #Se o comprimento for menor que a quantidade de vertices
         for Vertice in self.N:    
             Caminho = self.CaminhoGenerator(Vertice, comprimento, "ciclo")  #Busco um caminho que o vertice apareca
-
+            
             if( Caminho != None and Caminho != False):
-                return Caminho
-                    
+                if(self.ehCaminho(Caminho)):
+                    NDeOcorrencias = 0
+                    VerticePaiDoCilo = ''
+                    PrimeiraOcorrencia = -1
+                    SegundaOcorrencia = -1
+
+                    for elemento in Caminho:
+                        for index in range(len(Caminho)):
+                            if(elemento == Caminho[index]):
+                                NDeOcorrencias += 1
+                                if(PrimeiraOcorrencia == -1): PrimeiraOcorrencia = index
+                                else: SegundaOcorrencia = index
+
+                                if(NDeOcorrencias > 1): 
+                                    return Caminho[PrimeiraOcorrencia:SegundaOcorrencia+1]
+                        PrimeiraOcorrencia = -1
+                        SegundaOcorrencia = -1
+                        NDeOcorrencias = 0
+
         return False
-        
+    
+    def ehCaminho(self, Caminho):
+        for index in range(len(Caminho)):
+            if(index%2 == 0):
+                if(Caminho[index] not in self.N): return False
+            else:
+                if(Caminho[index] not in self.A): return False
+        return True
+
     def CaminhoGenerator(self, vertice, comprimento, opcao, Resultado=None, PaiGeral=''):
         if( Resultado == None ): Resultado = [] 
         if( PaiGeral == '' ): PaiGeral = vertice
@@ -263,17 +288,8 @@ class Grafo:
                 return False
             else:
                 Resultado.append( vertice )
-
-                PrimeiraOcorrencia = -1
-                SegundaOcorrencia = -1
-                for index in range(len(Resultado)):
-                    if(vertice == Resultado[index]):
-                        if(PrimeiraOcorrencia == -1):
-                            PrimeiraOcorrencia = index
-                        else:
-                            SegundaOcorrencia = index
-                print(PrimeiraOcorrencia, SegundaOcorrencia)
-                return Resultado[PrimeiraOcorrencia:SegundaOcorrencia]
+                return Resultado
+                
 
         #percorrendo arestas que contem o pai
         CaminhoFinal = list()
