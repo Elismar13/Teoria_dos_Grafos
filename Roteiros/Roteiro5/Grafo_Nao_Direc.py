@@ -423,15 +423,15 @@ class Grafo:
         todosOsCiclosDoGrafo = {}
         for vertice in self.N:
             cicloExisteParaDadoVertice = self.ExisteCicloParaOVertice(vertice)
-            # todosOsCiclosDoGrafo[vertice] = cicloExisteParaDadoVertice
+            todosOsCiclosDoGrafo[vertice] = cicloExisteParaDadoVertice
 
             if(cicloExisteParaDadoVertice): 
-                # pass
-                return cicloExisteParaDadoVertice
+                pass
+                # return cicloExisteParaDadoVertice
 
-        # for vertice in self.N:
-        #     print("Caminho do vertice {} : {}".format(vertice, todosOsCiclosDoGrafo[vertice]))
-        # return todosOsCiclosDoGrafo
+        for vertice in self.N:
+            print("Caminho do vertice {} : {}".format(vertice, todosOsCiclosDoGrafo[vertice]))
+        return todosOsCiclosDoGrafo
 
 
     # Antiga ciclo, ela serve como base para a CicloHamiltoniano.
@@ -493,36 +493,44 @@ class Grafo:
                         Resultado.append(V1)                #Assim, apos verificar que aresta incidem em si mesma, a aceitamos como um ciclo.
                         return Resultado
                     continue
-                if (len(ArestasComVertice) == 1):
-                    if (V1 not in Resultado and V1 == vertice): Resultado.append(V1)
-                    elif (V2 not in Resultado and V2 == vertice): Resultado.append(V2)
-                elif (V1 not in Resultado or V2 not in Resultado):
-                    """
-                     Pai: A; 
-
-                    ['A-B', 'A-C']
-
-                    1 RESULTADO P/ CADA COMBINAÇÃO = 2 RESULTADO
-                    
-                     """
-                    if (V1==vertice):
-                        if (V1 not in Resultado): Resultado.append(V1)
-                        if (V2 not in Resultado): Resultado.append(V2)
-                        self.Busca(vertice=V2, Resultado=Resultado)
-                    if (V2==vertice):
-                        if (V2 not in Resultado): Resultado.append(V2)
-                        if (V1 not in Resultado): Resultado.append(V1)
-                        self.Busca(vertice=V1, Resultado=Resultado)
                 else:
-                    continue
+                    if (len(ArestasComVertice) == 1):
+                        if (V1 not in Resultado and V1 == vertice): Resultado.append(V1)
+                        elif (V2 not in Resultado and V2 == vertice): Resultado.append(V2)
+                        else: return None
+                    elif (V1 not in Resultado or V2 not in Resultado):
+                        """
+                        Pai: A; 
+
+                        ['A-B', 'A-C']
+
+                        1 RESULTADO P/ CADA COMBINAÇÃO = 2 RESULTADO
+                        
+                        """
+                        if (V1==vertice):
+                            if (V1 not in Resultado):Resultado.append(V1)
+                            if (V2 not in Resultado): Resultado.append(V2)
+                            ciclo = self.Busca(vertice=V2, Resultado=Resultado)
+                            if(not ciclo):
+                                return None
+                        if (V2==vertice):
+                            if (V2 not in Resultado): Resultado.append(V2)
+                            if (V1 not in Resultado): Resultado.append(V1)
+                            ciclo = self.Busca(vertice=V1, Resultado=Resultado)
+                            if(not ciclo):
+                                return None
+                    else:
+                        None
 
         # ERRO TA AQUI!
+        if vertice not in Resultado:
+            return None
+
         if len(Resultado) == len(self.N):
-            if self.N[0] in Resultado: return Resultado #Esse é quando existe apenas um único vértice;
+            if self.N[0] in Resultado: 
+                return Resultado #Esse é quando existe apenas um único vértice;
 
         elif (Resultado[0]==vertice):
-            print(Resultado[0], vertice)
-
             return Resultado  #Esse é em modo geral.
 
     '''

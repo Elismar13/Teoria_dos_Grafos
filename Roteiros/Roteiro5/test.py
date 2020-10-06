@@ -88,18 +88,32 @@ from Grafo_Nao_Direc import Grafo
 # bug.adicionaAresta('C-D')
 # bug.adicionaAresta('D-E')
 # print(bug.CicloHamiltoniano())
-# print(bug.caminhoEureliano())
 
-bug3 = Grafo(['A', 'B', 'C', 'D', 'E'])
-bug3.adicionaAresta('A-B')
-bug3.adicionaAresta('B-C')
-bug3.adicionaAresta('C-D')
-bug3.adicionaAresta('D-E')
-
-print(bug3.CicloHamiltoniano())
 # print(bug3.caminhoEureliano())
 
 # bug2 = Grafo(['A', 'B', 'C'])
 # bug2.adicionaAresta('A-B')
 # bug2.adicionaAresta('B-C')
+# print(bug2.CicloHamiltoniano())
+
 # print(bug2.caminhoEureliano())
+
+bug2 = Grafo(['A', 'B', 'C'])
+bug2.adicionaAresta('A-B')
+bug2.adicionaAresta('B-C')
+print(bug2.CicloHamiltoniano())
+
+
+bug3 = Grafo(['D', 'B', 'C', 'A', 'E'])
+bug3.adicionaAresta('A-B')
+bug3.adicionaAresta('B-C')
+bug3.adicionaAresta('C-D')
+bug3.adicionaAresta('D-E')
+print(bug3.CicloHamiltoniano())
+
+
+grafoSimples = Grafo(['A', 'B', 'C'])
+grafoSimples.adicionaAresta('A-B')
+grafoSimples.adicionaAresta('B-C')
+grafoSimples.adicionaAresta('C-A')
+print(grafoSimples.CicloHamiltoniano())
