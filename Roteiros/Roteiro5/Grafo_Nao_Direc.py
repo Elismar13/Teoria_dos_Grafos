@@ -493,10 +493,13 @@ class Grafo:
                         Resultado.append(V1)                #Assim, apos verificar que aresta incidem em si mesma, a aceitamos como um ciclo.
                         return Resultado
                     continue
+
+                # ~~ o que modifiquei 
                 else:
                     if (len(ArestasComVertice) == 1):
                         if (V1 not in Resultado and V1 == vertice): Resultado.append(V1)
                         elif (V2 not in Resultado and V2 == vertice): Resultado.append(V2)
+                        #~~ Primeiro eu garanti que, caso nenhuma das condições acimas fossem verdadeiras, ele já retornaria
                         else: return None
                     elif (V1 not in Resultado or V2 not in Resultado):
                         """
@@ -510,15 +513,18 @@ class Grafo:
                         if (V1==vertice):
                             if (V1 not in Resultado):Resultado.append(V1)
                             if (V2 not in Resultado): Resultado.append(V2)
+                            # ~~ Atribui o resultado da recursão de Busca em uma variável, para poder verificar se satisfazia um ciclo, já que adicionei novas condições de retorno NULO
                             ciclo = self.Busca(vertice=V2, Resultado=Resultado)
                             if(not ciclo):
                                 return None
                         if (V2==vertice):
                             if (V2 not in Resultado): Resultado.append(V2)
                             if (V1 not in Resultado): Resultado.append(V1)
+                            # ~~ Atribui o resultado da recursão de Busca em uma variável, para poder verificar se satisfazia um ciclo, já que adicionei novas condições de retorno NULO
                             ciclo = self.Busca(vertice=V1, Resultado=Resultado)
                             if(not ciclo):
                                 return None
+                    # ~~ Caso o grau do vertice for > 1 OU os dois vertices já estarem no resultado, retorno None
                     else:
                         None
 
