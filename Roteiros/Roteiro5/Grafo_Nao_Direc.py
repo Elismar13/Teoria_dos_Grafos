@@ -476,7 +476,7 @@ class Grafo:
         *O else, é quando já adiconados o V1 ou V2 e passamos para outra aresas com o V1 ou V2 diferente (um novo caminho)
         '''
 
-        if (Resultado == None): Resultado = []
+        if (Resultado == None): Resultado = []#Resultado = {vertice: False for vertice in self.N} 
         ArestasComVertice = []
         for aresta in (self.ListaArestas()):
             if (aresta[0] == vertice): ArestasComVertice.append(aresta)
@@ -488,20 +488,21 @@ class Grafo:
             for aresta in range(len(ArestasComVertice)):
                 ArestaAtual = ArestasComVertice[aresta]     #Seria a primeira aresta, seguindo o exemplo é o '5-1'
                 V1, V2 = ArestaAtual[0], ArestaAtual[2]     #Dividiriamos a aresta em dois vértices separados '5' e '1'
-                if (V1 == V2):                              #De grafos maiores que 2 vertices ignoramos o laco. Excerto se existir apenas um único vértice;
-                    if len(self.N)==1:                      #Esse é quando existe apenas um único vértice;
-                        Resultado.append(V1)                #Assim, apos verificar que aresta incidem em si mesma, a aceitamos como um ciclo.
-                        return Resultado
-                    continue
+                V1EstaEmResultado = V1 not in Resultado
+                V2EstaEmResultado = V2 not in Resultado
+
+                if (V1 == V2) and (len(self.N)==1):         #De grafos maiores que 2 vertices ignoramos o laco. Excerto se existir apenas um único vértice. Esse é quando existe apenas um único vértice;;
+                    Resultado.append(V1)                #Assim, apos verificar que aresta incidem em si mesma, a aceitamos como um ciclo.
+                    return Resultado
 
                 # ~~ o que modifiquei 
                 else:
                     if (len(ArestasComVertice) == 1):
-                        if (V1 not in Resultado and V1 == vertice): Resultado.append(V1)
-                        elif (V2 not in Resultado and V2 == vertice): Resultado.append(V2)
+                        if (V1EstaEmResultado and V1 == vertice): Resultado.append(V1)
+                        elif (V2EstaEmResultado and V2 == vertice): Resultado.append(V2)
                         #~~ Primeiro eu garanti que, caso nenhuma das condições acimas fossem verdadeiras, ele já retornaria
                         else: return None
-                    elif (V1 not in Resultado or V2 not in Resultado):
+                    elif (V1EstaEmResultado or V2EstaEmResultado):
                         """
                         Pai: A; 
 
@@ -511,15 +512,15 @@ class Grafo:
                         
                         """
                         if (V1==vertice):
-                            if (V1 not in Resultado):Resultado.append(V1)
-                            if (V2 not in Resultado): Resultado.append(V2)
+                            if (V1EstaEmResultado):Resultado.append(V1)
+                            if (V2EstaEmResultado): Resultado.append(V2)
                             # ~~ Atribui o resultado da recursão de Busca em uma variável, para poder verificar se satisfazia um ciclo, já que adicionei novas condições de retorno NULO
                             ciclo = self.Busca(vertice=V2, Resultado=Resultado)
                             if(not ciclo):
                                 return None
                         if (V2==vertice):
-                            if (V2 not in Resultado): Resultado.append(V2)
-                            if (V1 not in Resultado): Resultado.append(V1)
+                            if (V2EstaEmResultado): Resultado.append(V2)
+                            if (V1EstaEmResultado): Resultado.append(V1)
                             # ~~ Atribui o resultado da recursão de Busca em uma variável, para poder verificar se satisfazia um ciclo, já que adicionei novas condições de retorno NULO
                             ciclo = self.Busca(vertice=V1, Resultado=Resultado)
                             if(not ciclo):
