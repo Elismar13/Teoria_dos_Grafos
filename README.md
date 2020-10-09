@@ -2,7 +2,9 @@
 
 > Códigos da disciplina Teoria dos Grafos do Curso Engenharia de Computação 2020.1.
 > Colaboradores:
+
   [Elismar Silva](https://github.com/Elismar13/)
+  
   Maria
   
 ## Getting Started
