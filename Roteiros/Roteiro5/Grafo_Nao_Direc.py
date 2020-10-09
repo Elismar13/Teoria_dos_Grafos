@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import copy
+
 class VerticeInvalidoException(Exception):
     pass
 
@@ -399,25 +401,90 @@ class Grafo:
 
     ### ======================= ROTEIRO 5 ==========================
 
+    # ============= TEM QUE SER CONEXO ===============
     def caminhoEureliano(self):
-        total = grau = 0
-        i = 1
-        n = len(self.N)
+        verticesComGrauImpar = []
+        for i in self.N:
+            if (self.grau(i))%2:
+                verticesComGrauImpar.append(i)
 
-        while(total <= 2 and i < n):
-            grau = 0
-            for j in range(0, n):
-                item = self.M[i][j]
-                if(item != '-'): 
-                    grau += int(item)
+        if (len(verticesComGrauImpar)==2 or len(verticesComGrauImpar)==0):
+            return self.AuxiliarEureliano()
+        else:
+            return False
 
-            if grau % 2 == 1:
-                total += 1
-            i += 1
+        # total = grau = 0
+        # i = 0
+        # n = len(self.N)
+        # while (total <= 2 and i < n):
+        #     grau = 0
+        #     for j in range(0, n):
+        #         item = self.M[i][j]
+        #         if (item != '-'):
+        #             grau += int(item)
+        #     if grau % 2 == 1:
+        #         total += 1
+        #     i += 1
+        # if not (total==2 or total==0):
+        #     return False
+        # else:
+        #     # return True
+        #     return self.AuxiliarEureliano()
 
-        if(total >= 2):
-            print('Não existe.')
-        else: print('Ss')
+    def AuxiliarEureliano(self):
+        TodosOsCaminhos = {}
+        Vertices = []
+        for i in self.N:
+            if (self.grau(i))%2:
+                Vertices.append(i)
+        if (Vertices == []):
+            self.Fleury(self.N[0])
+        else:
+            # pode ser qualquer VERTICE NESTA LISTA
+            Caminho = self.Fleury(Vertices[0])
+            return Caminho
+
+    def Fleury(self,Vertice):
+        Caminho = [Vertice]
+        ListaArestas = self.ListaArestas()
+        listaComVerticesIncidentes = []
+        arestasRemovidas = []
+
+        # Enquanto E não vazio
+        while(ListaArestas != []):
+            vi = Caminho[-1]
+            arestaIncidenteEscolhida = '' # ai
+            listaComVerticesIncidentes = self.arestas_sobre_vertice(vi)
+        
+            # Se Vi tem só uma aresta incidente
+            if len(listaComVerticesIncidentes)==1:
+                arestaIncidenteEscolhida = listaComVerticesIncidentes[0]
+            else:
+                # uma aresta incidente a vi em G' e que não é uma ponte 
+                for aresta in listaComVerticesIncidentes:
+                    ehPonte = self.Eh_Ponte(vi)
+                    if (not ehPonte):
+                        arestaIncidenteEscolhida = aresta
+                        break
+
+            # Retira a aresta do grafo G'
+            if(arestaIncidenteEscolhida in ListaArestas):
+                ListaArestas.remove(arestaIncidenteEscolhida)
+                arestasRemovidas.append(arestaIncidenteEscolhida)
+                self.remove_aresta(arestaIncidenteEscolhida)
+
+            # Acresenta Vj no final de C
+            if(arestaIncidenteEscolhida != ''):
+                if(arestaIncidenteEscolhida[0] != vi): 
+                    Caminho.append(arestaIncidenteEscolhida[0])
+                else:
+                    Caminho.append(arestaIncidenteEscolhida[2])
+        return Caminho
+
+
+    def Eh_Ponte(self,V2):
+        grau = self.grau(V2)
+        return grau < 1
 
     def CicloHamiltoniano(self): 
         todosOsCiclosDoGrafo = {}
@@ -426,12 +493,13 @@ class Grafo:
             todosOsCiclosDoGrafo[vertice] = cicloExisteParaDadoVertice
 
             if(cicloExisteParaDadoVertice): 
-                pass
-                # return cicloExisteParaDadoVertice
-
-        for vertice in self.N:
-            print("Caminho do vertice {} : {}".format(vertice, todosOsCiclosDoGrafo[vertice]))
-        return todosOsCiclosDoGrafo
+                if(len(cicloExisteParaDadoVertice)-1 == len(self.N)):
+                    #pass
+                    return cicloExisteParaDadoVertice
+            return False
+        # for vertice in self.N:
+        #     print("Caminho do vertice {} : {}".format(vertice, todosOsCiclosDoGrafo[vertice]))
+        # return todosOsCiclosDoGrafo
 
 
     # Antiga ciclo, ela serve como base para a CicloHamiltoniano.

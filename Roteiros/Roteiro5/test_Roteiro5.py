@@ -2,12 +2,12 @@ import unittest
 from Grafo_Nao_Direc import *
 
 class VerificarTests(unittest.TestCase):
-
     """
         Observação: No nosso algoritmo a ordem das arestas influenciam no resultado.
         Por exemplo, podemos chegar no mesmo resultado mas em uma ordem diferente, pois
         nosso algoritmo segue a ordem dos vertices.
     """
+
     def setUp(self):
         self.g1 = Grafo(['5', '1', '3', '6', '4', '0', '2', '7'])
         self.g1.adicionaAresta('5-1')
@@ -41,7 +41,7 @@ class VerificarTests(unittest.TestCase):
         self.g2.adicionaAresta('2-6')
         self.g2.adicionaAresta('0-6')
 
-        self.g3 = Grafo(['0','1','2','3','4','5','6','7','8','9'])
+        self.g3 = Grafo(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         self.g3.adicionaAresta('0-5')
         self.g3.adicionaAresta('0-1')
         self.g3.adicionaAresta('0-2')
@@ -59,7 +59,7 @@ class VerificarTests(unittest.TestCase):
         self.g3.adicionaAresta('8-6')
         self.g3.adicionaAresta('4-9')
         self.g3.adicionaAresta('5-9')
-        
+
         self.g4 = Grafo(['B', 'C', 'D', 'E'])
         self.g4.adicionaAresta('B-C')
         self.g4.adicionaAresta('C-D')
@@ -67,8 +67,8 @@ class VerificarTests(unittest.TestCase):
         self.g4.adicionaAresta('E-C')
         self.g4.adicionaAresta('B-E')
         self.g4.adicionaAresta('D-B')
-        
-        self.g5 = Grafo(['I','J','K','L','M'])
+
+        self.g5 = Grafo(['I', 'J', 'K', 'L', 'M'])
         self.g5.adicionaAresta('I-J')
         self.g5.adicionaAresta('J-K')
         self.g5.adicionaAresta('J-L')
@@ -77,7 +77,7 @@ class VerificarTests(unittest.TestCase):
         self.g5.adicionaAresta('K-I')
         self.g5.adicionaAresta('I-L')
         self.g5.adicionaAresta('M-L')
-        
+
         self.g6 = Grafo(['Z', 'P', 'I', 'U', 'V', 'T'])
         self.g6.adicionaAresta('P-Z')
         self.g6.adicionaAresta('U-P')
@@ -92,10 +92,10 @@ class VerificarTests(unittest.TestCase):
         self.g7 = Grafo(['B'])
         self.g7.adicionaAresta('B-B')
 
-        self.g8 = Grafo(['B','A'])
-        self.g8.adicionaAresta('B-B')
+        self.g8 = Grafo(['B', 'A'])
         self.g8.adicionaAresta('A-B')
         self.g8.adicionaAresta('A-B')
+        self.g8.adicionaAresta('A-A')
 
         self.g9 = Grafo(['B', 'A'])
         self.g9.adicionaAresta('B-B')
@@ -147,7 +147,14 @@ class VerificarTests(unittest.TestCase):
         self.simples3.adicionaAresta('C-D')
         self.simples3.adicionaAresta('A-D')
 
-        self.completo0 = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'])
+        self.simples4= Grafo(['1', '2', '3', '4', '5'])
+        self.simples4.adicionaAresta('2-3')
+        self.simples4.adicionaAresta('4-5')
+        self.simples4.adicionaAresta('4-1')
+        self.simples4.adicionaAresta('2-1')
+        self.simples4.adicionaAresta('5-3')
+
+        self.completo0 = Grafo(['A', 'B', 'D', 'E', 'F', 'G', 'I'])
         self.completo0.adicionaAresta('A-E')
         self.completo0.adicionaAresta('E-F')
         self.completo0.adicionaAresta('F-G')
@@ -155,8 +162,8 @@ class VerificarTests(unittest.TestCase):
         self.completo0.adicionaAresta('B-A')
         self.completo0.adicionaAresta('A-I')
         self.completo0.adicionaAresta('A-D')
-        self.completo0.adicionaAresta('A-C')
-        self.completo0.adicionaAresta('C-H')
+        self.completo0.adicionaAresta('I-D')
+        self.completo0.adicionaAresta('D-E')
 
         self.completo1 = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'J', 'H', 'I'])
         self.completo1.adicionaAresta('A-C')
@@ -176,6 +183,21 @@ class VerificarTests(unittest.TestCase):
         self.completo1.adicionaAresta('E-H')
         self.completo1.adicionaAresta('H-I')
         self.completo1.adicionaAresta('I-A')
+        self.completo1.adicionaAresta('H-J')
+
+        self.completo2 = Grafo(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+        self.completo2.adicionaAresta('9-4')
+        self.completo2.adicionaAresta('9-9')
+        self.completo2.adicionaAresta('3-2')
+        self.completo2.adicionaAresta('6-3')
+        self.completo2.adicionaAresta('7-3')
+        self.completo2.adicionaAresta('2-5')
+        self.completo2.adicionaAresta('5-1')
+        self.completo2.adicionaAresta('2-1')
+        self.completo2.adicionaAresta('1-6')
+        self.completo2.adicionaAresta('8-6')
+        #self.completo2.adicionaAresta('7-9')
+
 
         self.incompleto0 = Grafo(['h', 't', 'o', 'j', 'k', 'l', 'm', 'n'])
         self.incompleto0.adicionaAresta('o-o')
@@ -206,21 +228,47 @@ class VerificarTests(unittest.TestCase):
 
     def test_CicloHamiltoniano(self):
         self.assertEqual(self.g1.CicloHamiltoniano(), ['5', '1', '3', '6', '4', '0', '2', '7', '5'])
-        self.assertEqual(self.g2.CicloHamiltoniano(), ['3', '1', '5', '4', '6', '0', '2', '7', '3'])
+        self.assertFalse(self.g2.CicloHamiltoniano())
         self.assertEqual(self.g3.CicloHamiltoniano(), ['0', '1', '4', '2', '3', '6', '7', '8', '9', '5', '0'])
-        self.assertEqual(self.simples2.CicloHamiltoniano(), ['B', 'A', 'C', 'D', 'B'])
+        self.assertFalse(self.simples2.CicloHamiltoniano())
         self.assertEqual(self.g4.CicloHamiltoniano(), ['B', 'C', 'D', 'E', 'B'])
-        self.assertEqual(self.ciclo_simples.CicloHamiltoniano(), ['E', 'C', 'A', 'B', 'D', 'F', 'E'])
+        self.assertFalse(self.ciclo_simples.CicloHamiltoniano())
         self.assertEqual(self.g5.CicloHamiltoniano(), ['I', 'J', 'K', 'M', 'L', 'I'])
         self.assertEqual(self.g6.CicloHamiltoniano(), ['Z', 'P', 'I', 'T', 'V', 'U', 'Z'])
-        self.assertEqual(self.simples1.CicloHamiltoniano(), ['B', 'A', 'C', 'B'])
+        self.assertFalse(self.simples1.CicloHamiltoniano())
         self.assertEqual(self.g7.CicloHamiltoniano(), ['B', 'B'])
         self.assertEqual(self.completo1.CicloHamiltoniano(), ['A', 'B', 'D', 'C', 'E', 'F', 'J', 'H', 'I', 'A'])
-        self.assertEqual(self.completoAateG.CicloHamiltoniano(), ['B', 'A', 'C', 'D', 'E', 'F', 'G', 'B'])
-        self.assertEqual(self.g8.CicloHamiltoniano(), ['B', 'A','B'])
+        self.assertFalse(self.completoAateG.CicloHamiltoniano())
+        self.assertEqual(self.g8.CicloHamiltoniano(), ['B', 'A', 'B'])
         self.assertFalse(self.g9.CicloHamiltoniano())
         self.assertEqual(self.G10.CicloHamiltoniano(), ['A', 'B', 'C', 'D', 'A'])
-        self.assertEqual(self.lacos3.CicloHamiltoniano(), ['C', 'A', 'B', 'E', 'D', 'F', 'H', 'C'])
-        self.assertEqual(self.completo0.CicloHamiltoniano(), ['A', 'B', 'G', 'F', 'E', 'C', 'H', 'D', 'I', 'A'])
+        self.assertFalse(self.lacos3.CicloHamiltoniano())
+        self.assertEqual(self.completo0.CicloHamiltoniano(), ['A', 'B', 'G', 'F', 'E', 'D', 'I', 'A'])
         self.assertFalse(self.incompleto0.CicloHamiltoniano())
         self.assertEqual(self.simples3.CicloHamiltoniano(), ['A', 'B', 'C', 'D', 'A'])
+        self.assertFalse(self.completo2.CicloHamiltoniano())
+        self.assertEqual(self.simples4.CicloHamiltoniano(), ['1', '2', '3', '5', '4', '1'])
+
+    def test_caminhoEureliano(self):
+        #Por enquanto, só fala que tem ou não (Não mostrano o caminho)
+
+        self.assertFalse(self.g1.caminhoEureliano())
+        self.assertFalse(self.g2.caminhoEureliano())
+        self.assertFalse(self.g3.caminhoEureliano())
+        self.assertTrue(self.simples2.caminhoEureliano())
+        self.assertFalse(self.g4.caminhoEureliano())
+        self.assertFalse(self.ciclo_simples.caminhoEureliano())
+        self.assertFalse(self.g5.caminhoEureliano())
+        self.assertFalse(self.g6.caminhoEureliano())
+        self.assertTrue(self.simples1.caminhoEureliano())
+        self.assertFalse(self.g7.caminhoEureliano())
+        self.assertFalse(self.completo1.caminhoEureliano())
+        self.assertFalse(self.completoAateG.caminhoEureliano())
+        self.assertFalse(self.g8.caminhoEureliano())
+        self.assertFalse(self.G10.caminhoEureliano())
+        self.assertFalse(self.lacos3.caminhoEureliano())
+        self.assertTrue(self.completo0.caminhoEureliano())
+        self.assertFalse(self.incompleto0.caminhoEureliano())
+        self.assertFalse(self.simples3.caminhoEureliano())
+        self.assertFalse(self.completo2.caminhoEureliano())
+        self.assertFalse(self.simples4.caminhoEureliano())
