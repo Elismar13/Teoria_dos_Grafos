@@ -45,8 +45,8 @@ test.test_Dijkstra()
 # g3.adicionaAresta('2-6')
 
 # print(g3.Dijkstra('7','4',1,4,[])) #['4', '7']
-# #print(g3.Dijkstra('2','4',1,4,['3','6'])) #['4', '1', '3', '2']
-# #print(g3.Dijkstra('1','5',3,5,['2','7'])) #['5', '7', '4', '1']
+# print(g3.Dijkstra('2','4',1,4,['3','6'])) #['4', '1', '3', '2']
+# print(g3.Dijkstra('1','5',3,5,['2','7'])) #['5', '7', '4', '1']
 
 # g4 = Grafo(['0', '1', '2', '3'])
 # g4.adicionaAresta('1-0')

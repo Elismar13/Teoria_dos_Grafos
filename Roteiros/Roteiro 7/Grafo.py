@@ -478,6 +478,8 @@ class Grafo:
             return None
         for i in Phi2:                                  # Aqui, colocamos todos os menores valores em um dicionário com a chave sendo a sua posição
             Aux[i] = Beta[i]                            # e o seu item/valor correspondeno ao seu respectivo beta.
+
+        print(Phi, Beta, Aux)
         IndiceComMenorValor = min(Aux, key = lambda chave: int(Aux[chave]))     # Aqui usamos uma tecnica para descobrir o menor valor do item
         return IndiceComMenorValor                                              # E retornamos a sua chave;
 

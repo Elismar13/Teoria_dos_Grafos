@@ -448,7 +448,8 @@ class Grafo:
 
             vertices_mapeados[vertice_atual]['phi'] = 1 #Colocamos o phi(VerticeSAtual) = 1.
 
-        
+        # DEBUG PARA SABER O QUE ESTÁ SENDO PROCESSADO
+        # self.mostraMapaNaTela(vertices_mapeados)
         return self.geraCaminhoAPartirDoMapa(vertices_mapeados, vertice_partida, vertice_destino)
 
 
@@ -478,10 +479,23 @@ class Grafo:
 
     def procura_vertice_com_pi_zero_e_menor_beta(self, mapa: dict): 
         # Pego uma lista com todos os vertices com phi = 0
+        vertices_validos = []
         for vertice in mapa.keys():
             if( mapa[vertice]['phi'] == 0 and mapa[vertice]['beta'] < float('inf') ): 
-                return vertice
+                # Adiciono todos os vertices TEMPORÁRIOS e seus BETAS em uma tupla.
+                vertices_validos.append( (vertice, mapa[vertice]['beta']) )
         
+        # Se tiver um dado vertice TEMPORARIO COM BETA MENOR QUE INFINITO
+        if(vertices_validos != []):
+
+            #Faço uma busca linear para saber quais deles tem o menor beta
+            vertice_com_menor_beta = ('A', float('inf'))
+            for vertice in vertices_validos:
+                if(vertice_com_menor_beta[1] > vertice[1]):
+                    vertice_com_menor_beta = vertice
+            
+            # Por fim, retorno apenas o vertice.
+            return vertice_com_menor_beta[0]
         # Não há mais nada a se fazer por aqui...
         return None
 
@@ -500,3 +514,13 @@ class Grafo:
             vertice_atual = mapa[vertice_atual]['antecessor']
             melhorCaminho.append(vertice_atual)
         return melhorCaminho
+
+    # Função apenas para depuração, pode ignorar
+    def mostraMapaNaTela(self, mapa):
+        for elemento in mapa.keys():
+            elemento_no_mapa = mapa[elemento]
+
+            print("===== VERTICE {} ======".format(elemento))
+
+            for chave in elemento_no_mapa.keys():
+                print("{}: {}".format(chave, elemento_no_mapa[chave]))
