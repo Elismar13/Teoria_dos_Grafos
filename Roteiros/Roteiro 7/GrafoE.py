@@ -449,7 +449,7 @@ class Grafo:
             vertices_mapeados[vertice_atual]['phi'] = 1 #Colocamos o phi(VerticeSAtual) = 1.
 
         # DEBUG PARA SABER O QUE ESTÁ SENDO PROCESSADO
-        # self.mostraMapaNaTela(vertices_mapeados)
+        self.mostraMapaNaTela(vertices_mapeados)
         return self.geraCaminhoAPartirDoMapa(vertices_mapeados, vertice_partida, vertice_destino)
 
 

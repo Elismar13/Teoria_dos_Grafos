@@ -1,15 +1,15 @@
 from GrafoE import *
-from test_Roteiro7 import VerificarTests
+# from test_Roteiro7 import VerificarTests
 
-test = VerificarTests()
-test.setUp()
-test.test_Dijkstra()
+# test = VerificarTests()
+# test.setUp()
+# test.test_Dijkstra()
 
-# g1 = Grafo(['A', 'B', 'C'])
-# g1.adicionaAresta('A-B')
-# g1.adicionaAresta('B-C')
+g1 = Grafo(['A', 'B', 'C'])
+g1.adicionaAresta('A-B')
+g1.adicionaAresta('B-C')
 
-# print(g1.Dijkstra('A','C',1,1, ['B'] )) #C,B,A
+print(g1.Dijkstra('A','C',1,1, ['B'] )) #C,B,A
 # print(g1.Dijkstra('A','C',1,1, [] )) #False
 
 # g2 = Grafo(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
@@ -54,8 +54,8 @@ test.test_Dijkstra()
 # g4.adicionaAresta('1-2')
 # g4.adicionaAresta('2-3')
 
-# #print(g4.Dijkstra('0','3',1,2,['2'])) #['3', '2', '0']
-# #print(g4.Dijkstra('0','3',1,2,['1'])) #['3', '2', '1', '0']
+# print(g4.Dijkstra('0','3',1,2,['2'])) #['3', '2', '0']
+# print(g4.Dijkstra('0','3',1,2,['1'])) #['3', '2', '1', '0']
 
 # g5 = Grafo(['5','4','6','7','8','9'])
 # g5.adicionaAresta('5-4')
@@ -65,7 +65,7 @@ test.test_Dijkstra()
 # g5.adicionaAresta('4-6')
 # g5.adicionaAresta('6-7')
 
-# #print(g5.Dijkstra('8','7',1,5,['5','9'])) #['7', '6', '4', '5', '8']
+#print(g5.Dijkstra('8','7',1,5,['5','9'])) #['7', '6', '4', '5', '8']
 
 # g6 = Grafo(['L','M','N','O','P'])
 # g6.adicionaAresta('L-M')
@@ -114,8 +114,8 @@ test.test_Dijkstra()
 # g9.adicionaAresta('2-6')
 # g9.adicionaAresta('0-6')
 
-# #print(g9.Dijkstra('5','0',1,5,['1'])) #['0', '6', '3', '1', '5']
-# #print(g9.Dijkstra('1','4',2, 2, ['2']))
+# print(g9.Dijkstra('5','0',1,5,['1'])) #['0', '6', '3', '1', '5']
+# print(g9.Dijkstra('1','4',2, 2, ['2']))
 
 # g10 = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
 # g10.adicionaAresta('A-B')
