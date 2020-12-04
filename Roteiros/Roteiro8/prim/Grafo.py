@@ -483,7 +483,7 @@ class Grafo:
                     weight = self.edge_weight(aresta_valida)
             
                 if((y in Q.keys()) and (weight != '-' and weight < jet[y])):
-                    parents[y] = x
+                    parents[y] = (x, weight)
                     jet[y] = weight
                     
 
