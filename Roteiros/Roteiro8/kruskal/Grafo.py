@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import math
+import random
 
 class VerticeInvalidoException(Exception):
     pass
@@ -384,10 +386,15 @@ class Grafo:
                     if (int(self.M[i][j]) > 0):
                         for k in range(int(self.M[i][j])):
                             Aresta = self.N[i] + '-' + self.N[j]
-                            ListaArestas.append(Aresta)
+                            if(Aresta not in ListaArestas):
+                                ListaArestas.append(Aresta)
         return ListaArestas
 
 # ==== ROTEIRO 8 =====
+
+    def adicionaArestaComPeso(self, aresta: str, peso: int):
+        for i in range(peso):
+            self.adicionaAresta(aresta)
 
     def peso_aresta(self, aresta):
         index_v1 = self.__indice_primeiro_vertice_aresta(aresta)
@@ -414,13 +421,19 @@ class Grafo:
         bucket j(e ), where """
     def buckets_das_arestas(self):
         min, max = self.arestas_com_custo_minimo_maximo()
-        buckets = dict()
-        arestas = self.ListaArestas()
+        buckets = list()
 
+        # Starting al buckets in empty array
+        for index in range(10000):
+            buckets.append([])
+
+        arestas = self.ListaArestas()
         for aresta in arestas:
             custo_aresta = self.peso_aresta(aresta)
             b = len(arestas)
-            buckets[aresta] = (((custo_aresta - min)/(max-min)) * (b-1)) + 1
+            bucket_da_aresta = (((custo_aresta - min)/(max-min)) * (b-1)) + 1
+            index_bucket = math.floor(bucket_da_aresta)
+            buckets[int(index_bucket)].append( (aresta, bucket_da_aresta) )
             
         """ Group the edges of E into buckets E(l), E(2), . . . , E(b); """
 
@@ -428,17 +441,13 @@ class Grafo:
 
 
     def busca_aresta_menor_custo(self, buckets):
-        aresta_menor_custo = {
-            aresta: '',
-            custo: 999999999,
-        }
+        aresta_menor_custo = ('', 999999999)
 
-        for bucket in buckets.keys():
-            if(buckets[bucket] < aresta_menor_custo['custo']):
-                aresta_menor_custo['aresta'] = bucket
-                aresta_menor_custo['custo'] = bucket[bucket]
+        for bucket in buckets:
+            if(bucket[1] < aresta_menor_custo[1]):
+                aresta_menor_custo = bucket
         
-        return aresta_menor_custo['aresta']
+        return aresta_menor_custo
 
 
     def busca_aresta_com_menor_peso(self):
@@ -451,47 +460,82 @@ class Grafo:
                 aresta = aresta
         
         return aresta
-                
-    def find(i):
+    
+    def vertices_adjacentes_a_um_vertice(self, vertice):
+        '''
+        Explicação: Em sua definição é basicamente todas as outras combinação (na matriz) que não foram inicialmente declaradas;
+        '''
+        vertices_adjacentes_a_um_vertice = []
+        for i in range(len(self.N)):
+            for j in range(len(self.N)):
+                if (self.M[i][j] != '-'):
+                    V1, V2 = self.N[i], self.N[j]
+                    if (int(self.M[i][j]) != 0 and (V1 == vertice or V2 == vertice)):
+                        vertices_adjacentes_a_um_vertice.append(V2 if vertice == V1 else V1)
+        return vertices_adjacentes_a_um_vertice
+
+    def FIND(self, i):
         """ 
             FIND(i) (Determine the connected component containing the vertex i): Move along the father links
             to root(T(i)). After this apply the collapsing rule: if j is a node on the path from i to root(T(i)) then
             set father(i):=roor(T(i)).
         """
+        adj = self.vertices_adjacentes_a_um_vertice(i)
+        return sorted(adj)
 
+    def UNION(self, u, v):
+        return "{}-{}".format(u, v)
 
     def kruskal(self):
         """
             Determine the minimal and maximal costs of the edges in E;
             Group the edges of E into buckets E(l), E(2), . . . , E(b);
         """
+
         grupo_buckets = self.buckets_das_arestas()
 
         """ Make t = 0 """
-        minimum_spanning_tree = Grafo()
+        vertices, arestas = list(), list()
 
         j = 0
-        H = None
-        while(len(minimum_spanning_tree.N)):
-            if(H == None): 
+        H = []
+        while(len(vertices) < len(self.N) - 1):
+            if(H == []): 
                 """ 
                     Select the next j for which the bucket E(j) is non-empty;
                 """
-                chaves = grupo_buckets.keys()
-                for index in chaves:
-                    if(grupo_buckets[chaves[index]] > 0):
+                for index in range(len(grupo_buckets)):
+                    if(grupo_buckets[index] != []):
                         j = index
-
-                        """ Form a heap H(j) for E(j). Em python n tem pilha por default,
-                         entao vou usar uma lista)"""
-                        H = grupo_buckets.copy()
-
                         break
+                
+
+                """ Form a heap H(j) for E(j). 
+                    Em python não tem pilha por default,
+                    entao vou usar uma lista ordenada"""
+                H = sorted(grupo_buckets[index])
             
             """ Select the minimal cost edge e’ = (u, o) from E(j); """
-            aresta_com_menor_custo = self.busca_aresta_menor_custo(grupo_buckets)
+            aresta_com_menor_custo = self.busca_aresta_menor_custo(grupo_buckets[index])
             """ Delete e’ from H(j); """
-            H.pop(aresta_com_menor_custo)
+            H.remove(aresta_com_menor_custo)
+            grupo_buckets[index].remove(aresta_com_menor_custo)
 
+            """ if FIND(u) #FIND(u) then begin
+                T:=Tu{e’};
+                UNION(FIND(u), FIND(u)); """
+            u, v = aresta_com_menor_custo[0].split('-')
+            if self.FIND(u) != self.FIND(v):
+                u_isNotPresent, v_isNotPresent = u not in vertices, v not in vertices
+                if(u_isNotPresent):
+                    vertices.append(u)
+                if(v_isNotPresent):
+                    vertices.append(v)
+                if((aresta_com_menor_custo[0] not in arestas) and (u_isNotPresent or v_isNotPresent)):
+                    aresta = self.UNION(u, v)
+                    arestas.append( (aresta, self.peso_aresta(aresta)) )
 
-        return ''
+        return {
+            'vertices': vertices,
+            'arestas': arestas,
+        }

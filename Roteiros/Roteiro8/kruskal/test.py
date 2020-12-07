@@ -21,7 +21,7 @@ adiciona_ae(g1, 'D-E', 7)
 adiciona_ae(g1, 'D-F', 1) 
 adiciona_ae(g1, 'F-E', 9) 
 
-print(g1)
+print(g1.kruskal())
 # print(g1.peso_aresta('D-E'))
 
 
